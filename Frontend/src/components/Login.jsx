@@ -1,10 +1,19 @@
 import { UserLock } from "lucide-react";
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 const Login = () => {
-  const [state, setState] = useState("login");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [state, setState] = useState(searchParams.get("page") || "login");
+  const { user, login, signUp } = useAuth();
+  const navigate = useNavigate();
 
-  const [formData, setFormData] = React.useState({
+  const updatePage = () => {
+    setSearchParams({ page: state === "login" ? "register" : "login" }); // Updates URL to ?page=state
+  };
+
+  const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
@@ -17,7 +26,23 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (state === "login") {
+      login(formData);
+    } else {
+      signUp(formData);
+    }
   };
+ useEffect(() => {
+  const page = searchParams.get("page");
+  if (page && page !== state) {
+    setState(page);
+  }
+}, [searchParams, state]);
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user]);
   return (
     <section className="md:px-16  pt-24 min-h-screen flex items-center justify-center px-8">
       <form
@@ -128,9 +153,10 @@ const Login = () => {
         </button>
 
         <p
-          onClick={() =>
-            setState((prev) => (prev === "login" ? "register" : "login"))
-          }
+          onClick={() => {
+            updatePage();
+            // setState((prev) => (prev === "login" ? "register" : "login"))
+          }}
           className="text-gray-400 text-sm mt-3 mb-11 cursor-pointer"
         >
           {state === "login"

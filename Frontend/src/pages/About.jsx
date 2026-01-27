@@ -1,5 +1,5 @@
 import React from "react";
-import SectionTitle from "../components/section-title";
+import SectionTitle from "../components/SectionTitle";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 

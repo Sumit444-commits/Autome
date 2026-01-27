@@ -1,4 +1,4 @@
-import SectionTitle from "../components/section-title";
+import SectionTitle from "../components/SectionTitle";
 import { ArrowUpRight, SendIcon } from "lucide-react";
 import { motion } from "framer-motion";
 

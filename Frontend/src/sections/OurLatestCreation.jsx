@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import SectionTitle from "../components/section-title";
+import SectionTitle from "../components/SectionTitle";
 
 export default function OurLatestCreation() {
     const [isHovered, setIsHovered] = useState(false);

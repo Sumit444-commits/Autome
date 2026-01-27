@@ -1,8 +1,10 @@
 import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
-import TiltedImage from "../components/tilt-image";
+import TiltedImage from "../components/TiltImage";
+import { useNavigate } from "react-router-dom";
 
 export default function HeroSection() {
+    const navigate = useNavigate()
     return (
         <section className="flex flex-col items-center -mt-18">
             <motion.svg className="absolute -z-10 w-full -mt-40 md:mt-0" width="1440" height="676" viewBox="0 0 1440 676" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -50,7 +52,7 @@ export default function HeroSection() {
                 viewport={{ once: true }}
                 transition={{ type: "spring", stiffness: 320, damping: 70, mass: 1 }}
             >
-                <button className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 transition text-white active:scale-95 rounded-lg px-7 h-11">
+                <button onClick={()=>navigate("/generate")} className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 transition text-white active:scale-95 rounded-lg px-7 h-11">
                     Generate Now
                     <ArrowRight className="size-5" />
                 </button>

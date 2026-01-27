@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import SectionTitle from "../components/section-title";
+import SectionTitle from "../components/SectionTitle";
 import { motion } from "framer-motion";
 
 export default function TrustedCompanies() {

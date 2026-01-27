@@ -1,6 +1,6 @@
-import Footer from "./components/footer";
-import LenisScroll from "./components/lenis-scroll";
-import Navbar from "./components/navbar";
+import Footer from "./components/Footer";
+import LenisScroll from "./components/LenisScroll";
+import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import { Route, Routes,useLocation } from "react-router-dom";
 import Generate from "./pages/Generate";
@@ -25,7 +25,7 @@ export default function App() {
         <Route path="/generate" element={<Generate />} />
         <Route path="/showcase" element={<Showcase />} />
         <Route path="/about" element={<About />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/auth" element={<Login />} />
         <Route path="/*" element={<Error />} />
       </Routes>
 

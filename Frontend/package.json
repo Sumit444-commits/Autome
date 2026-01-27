@@ -13,6 +13,7 @@
         "@monaco-editor/react": "^4.7.0",
         "@tailwindcss/vite": "^4.1.14",
         "@uiw/react-markdown-preview": "^5.1.5",
+        "axios": "^1.13.3",
         "dotenv": "^17.2.3",
         "downloadjs": "^1.4.7",
         "framer-motion": "^12.23.22",

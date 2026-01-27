@@ -11,22 +11,25 @@ const port = process.env.PORT || 3000;
 
 app.use(
   cors({
+    origin: ["http://localhost:5173", "http://localhost:5000"],
     credentials: true,
   }),
 );
-app.set("trust proxy", 1);
+// app.set("trust proxy", 1);
 
 app.use(
   session({
     secret: process.env.SESSION_KEY,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: true, // Change to true for testing
     cookie: {
-      maxAge: 1000 * 60 * 60 * 24 * 7, // one week
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+      secure: false, // Must be false for localhost HTTP
+      sameSite: 'lax', 
+      httpOnly: true, // Recommended for security
     },
   }),
 );
-
 app.use(express.json());
 
 // routes for backend

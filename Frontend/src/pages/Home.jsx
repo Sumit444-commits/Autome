@@ -1,9 +1,9 @@
-import GetInTouch from "../sections/get-in-touch";
-import OurTestimonials from "../sections/our-testimonials";
-import TrustedCompanies from "../sections/trusted-companies";
-import AboutOurApps from "../sections/about-our-apps";
-import HeroSection from "../sections/hero-section";
-import OurLatestCreation from "../sections/our-latest-creation";
+import GetInTouch from "../sections/GetInTouch";
+import OurTestimonials from "../sections/OurTestimonials";
+import TrustedCompanies from "../sections/TrustedCompanies";
+import AboutOurApps from "../sections/AboutOurApps";
+import HeroSection from "../sections/HeroSection";
+import OurLatestCreation from "../sections/OurLatestCreation";
 
 export default function Home() {
   return (
