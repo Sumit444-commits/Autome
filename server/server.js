@@ -1,0 +1,50 @@
+import "dotenv/config";
+import express from "express";
+import session from "express-session";
+import cors from "cors";
+import authRoutes from "./routes/auth-routes.js";
+import errorMiddleware from "./middlewares/error-middleware.js";
+import connectDB from "./config/db.js";
+
+const app = express();
+const port = process.env.PORT || 3000;
+
+app.use(
+  cors({
+    credentials: true,
+  }),
+);
+app.set("trust proxy", 1);
+
+app.use(
+  session({
+    secret: process.env.SESSION_KEY,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 7, // one week
+    },
+  }),
+);
+
+app.use(express.json());
+
+// routes for backend
+app.use("/api/auth", authRoutes);
+
+// default route to confirm server is running
+app.get("/", (req, res) => {
+  console.log("server is runing...");
+});
+
+app.use(errorMiddleware);
+
+connectDB()
+  .then(() => {
+    app.listen(port, () => {
+      console.log(`Server running on http://localhost:${port}`);
+    });
+  })
+  .catch((error) => console.log(error));
+
+export default app;
