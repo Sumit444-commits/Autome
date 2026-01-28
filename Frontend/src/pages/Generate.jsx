@@ -1,53 +1,25 @@
 import { CloudDownload, Copy, FileSpreadsheet } from "lucide-react";
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useParams } from "react-router-dom";
 import ReadmePanel from "../components/ReadmePanel";
 import download from "downloadjs";
+import { useStore } from "../hooks/useStore";
+import { useAuth } from "../hooks/useAuth";
+import {useNavigate} from "react-router-dom"
 
 const Generate = () => {
   const githubRegex =
     /^(https?:\/\/)?(www\.)?github\.com\/[\w-]+\/[\w.-]+(?:\.git)?\/?$/;
   const [repoURL, setRepoURL] = useState("");
-  const [isAvailable, setisAvailable] = useState(false);
+  const [isAvailable, setIsAvailable] = useState(false);
   const [mode, setMode] = useState("Preview");
+  const { repoInfo, fetchRepoInfo } = useStore();
+  const [loading, setLoading] = useState(false);
+  const { isLoggedIn } = useAuth();
 
-  const [repoOwn, setRepoOwn] = useState({
-    owner: "sumit444-commits",
-    repo: "ai-code-reviewer",
-    description: "hey this is for test",
-  });
-  const [source, setSource] = useState(`
-# 🚀 Autome | AI-Powered README Generator
+  const navigate = useNavigate()
 
-[![Stack](https://img.shields.io/badge/Stack-MERN-blue.svg)](https://github.com/Sumit444-commits)
-[![Powered by Gemini](https://img.shields.io/badge/AI-Gemini%20AI-orange.svg)](https://gemini.google.com/)
-
-**Autome** is a specialized engine designed to bridge the gap between complex codebases and professional documentation. Built as a **MERN stack** application, it analyzes your repositories to generate structured READMEs in seconds.
-
-## 🛠 Features
-- **Intelligent Analysis:** Deep-dives into project directory structures.
-- **Markdown Export:** Generate production-ready .md files.
-- **AI Synthesis:** Leverages Google's Gemini AI for context-aware writing.
-
-## 💻 Tech Stack
-| Component | Technology |
-| :--- | :--- |
-| **Frontend** | React & Tailwind CSS |
-| **Backend** | Node.js & Express |
-| **Database** | MongoDB |
-| **AI Engine** | Google Gemini |
-
-## 📦 Installation
-\`\`\`bash
-git clone https://github.com/Sumit444-commits/autome.git
-cd autome
-npm install
-\`\`\`
-
----
-*Developed by **Sumit Sharma** at Mehran University of Engineering and Technology.*
-`);
+  const [source, setSource] = useState("");
 
   const handleAvailbility = async () => {
     if (repoURL === "") {
@@ -58,9 +30,17 @@ npm install
       toast.error("Check The repo format!");
       return;
     }
-    console.log(repoURL);
-    setisAvailable(true);
+    setLoading(true);
+    fetchRepoInfo(repoURL);
+    setLoading(false);
   };
+  useEffect(() => {
+    if (repoInfo) {
+      setIsAvailable(true);
+    } else {
+      setIsAvailable(false);
+    }
+  }, [repoInfo]);
 
   const handleEdit = (value) => {
     setSource(value);
@@ -80,6 +60,7 @@ npm install
     }
     download(source, "readme.md", "text/markdown");
   };
+  
   return (
     <>
       <section className=" md:px-16  pt-24 min-h-screen">
@@ -112,11 +93,19 @@ npm install
                       placeholder="e.g., https://github.com/Sumit444-commits/ai-code-reviewer"
                       className="w-full px-4 py-3 rounded-lg border border-white/12 bg-black/20 text-zinc-100 placeholder:text-zinc-40 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
+
                     <button
-                      onClick={handleAvailbility}
-                      className="text-center w-full bg-indigo-600 py-2 rounded-lg  hover:bg-indigo-700 transition-all duration-200"
+                      onClick={()=> {
+                        {!isLoggedIn ? (navigate("/auth?page=login")) : handleAvailbility()}
+                      }}
+                      disabled={loading}
+                      className={`text-center w-full bg-indigo-600 py-2 rounded-lg hover:bg-indigo-700 transition-all duration-200 ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
                     >
-                      Check Availability
+                      {!isLoggedIn ? (
+                        "Login to use"
+                      ) : (
+                        <>{loading ? "Checking..." : "Check Availability"}</>
+                      )}
                     </button>
                   </div>
                 </div>
@@ -127,12 +116,17 @@ npm install
                   <div className="p-6 rounded-2xl bg-white/8 border border-white/12 shadow-xl space-y-6">
                     {/* Repo Description */}
                     <div className="space-y-5">
-                      <h2 className="text-xl font-bold text-zinc-100 mb-1">
-                        {repoOwn.repo}
-                      </h2>
+                      <div className="flex justify-between items-center">
+                        <h2 className="text-xl font-bold text-zinc-100 mb-1">
+                          {repoInfo?.repo}
+                        </h2>
+                        <div className="bg-blue-700/10 rounded-full text-blue-900 px-2">
+                          {repoInfo?.branch}
+                        </div>
+                      </div>
                       <p className="text-sm text-zinc-400">
-                        {repoOwn.description !== ""
-                          ? repoOwn.description
+                        {repoInfo?.description !== ""
+                          ? repoInfo?.description
                           : "No description"}
                       </p>
                     </div>
@@ -172,7 +166,7 @@ npm install
 
                   {/* Download Button */}
                   <button
-                  onClick={handleDownload}
+                    onClick={handleDownload}
                     type="button"
                     className="flex-1 md:flex-none flex items-center justify-center gap-2 text-zinc-300 rounded-xl active:scale-95 transition-all text-sm h-12 px-5 bg-white/5 border border-white/10 hover:bg-white/10 hover:text-white"
                   >

@@ -4,14 +4,17 @@ import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "./context/AuthContext.jsx";
+import { StoreProvider } from "./context/StoreContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <>
     <Toaster />
     <AuthProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <StoreProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </StoreProvider>
     </AuthProvider>
   </>,
 );

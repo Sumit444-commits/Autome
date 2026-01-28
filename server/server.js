@@ -3,8 +3,9 @@ import express from "express";
 import session from "express-session";
 import cors from "cors";
 import authRoutes from "./routes/auth-routes.js";
+import githubRoutes from "./routes/github-routes.js";
 import errorMiddleware from "./middlewares/error-middleware.js";
-import connectDB from "./config/db.js";
+import connectDB from "./config/db-config.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -34,6 +35,7 @@ app.use(express.json());
 
 // routes for backend
 app.use("/api/auth", authRoutes);
+app.use("/api/github", githubRoutes);
 
 // default route to confirm server is running
 app.get("/", (req, res) => {
