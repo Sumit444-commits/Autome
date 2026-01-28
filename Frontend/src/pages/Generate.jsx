@@ -125,7 +125,7 @@ const Generate = () => {
                         </div>
                       </div>
                       <p className="text-sm text-zinc-400">
-                        {repoInfo?.description !== ""
+                        {repoInfo?.description
                           ? repoInfo?.description
                           : "No description"}
                       </p>
