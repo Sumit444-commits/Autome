@@ -7,15 +7,15 @@
 
 Autome is a sophisticated, AI-powered documentation engine designed to streamline the creation of high-fidelity GitHub READMEs. By leveraging the Google Gemini API and GitHub's Octokit, Autome analyzes repository structures and source code to generate professional, context-aware documentation in seconds.
 
+
+![thumbnail](./assets/thumbnail.png)
 ---
 
 ## 🖼️ App Preview
 
 ![Home](./assets/home.png)
-![Generate Page](./assets/home.png)
 ![Generate Page](./assets/generate.png)
 ![About](./assets/about.png)
-
 <!-- 
 Developer Note: To update this preview:
 1. Capture a high-resolution screenshot of the dashboard/editor.
