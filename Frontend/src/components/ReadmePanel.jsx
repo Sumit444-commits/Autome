@@ -89,7 +89,7 @@ const ReadmePanel = ({ mode, source, handleEdit, generating }) => {
     <div className="text-center space-y-2">
       <h3 className="text-zinc-200 font-medium">Analyzing Repository DNA...</h3>
       <p className="text-zinc-500 max-w-[320px] leading-relaxed text-sm">
-        Gemini is reading your <span className="text-blue-400/80">package.json</span> to build the perfect README.
+        Autome is reading your <span className="text-blue-400/80">repository</span> to build the perfect README.
       </p>
     </div>
 
