@@ -4,7 +4,6 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import { Route, Routes,useLocation } from "react-router-dom";
 import Generate from "./pages/Generate";
-import Showcase from "./pages/Showcase";
 import About from "./pages/About";
 import Login from "./components/Login";
 import Error from "./pages/Error";
@@ -23,7 +22,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/generate" element={<Generate />} />
-        <Route path="/showcase" element={<Showcase />} />
+       
         <Route path="/about" element={<About />} />
         <Route path="/auth" element={<Login />} />
         <Route path="/*" element={<Error />} />

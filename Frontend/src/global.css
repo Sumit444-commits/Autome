@@ -3,6 +3,17 @@
 
 @theme {
   --font-poppins: "Poppins", sans-serif;
+  /* Define the utility name: animate-loader-slide */
+  --animate-loader-slide: loader-slide 2s ease-in-out infinite;
+  
+  /* Define the utility name: animate-spin-slow */
+  --animate-spin-slow: spin 3s linear infinite;
+
+  @keyframes loader-slide {
+    0% { transform: translateX(-100%); width: 30%; }
+    50% { transform: translateX(100%); width: 50%; }
+    100% { transform: translateX(250%); width: 30%; }
+  }
 }
 
 body {

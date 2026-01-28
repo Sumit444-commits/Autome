@@ -30,7 +30,7 @@ export default function Navbar() {
           <h1 className="text-[26px] font-medium">autome</h1>
         </Link>
 
-        <div className="hidden lg:flex items-center gap-8 transition duration-500">
+        <div className="hidden lg:flex items-center gap-8 transition duration-500 ">
           <NavLink to={"/"} className="hover:text-slate-300 transition">
             Home
           </NavLink>
