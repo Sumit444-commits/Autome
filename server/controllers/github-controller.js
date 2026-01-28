@@ -1,4 +1,4 @@
-import { bytezModel } from "../config/ai-config.js";
+import geminiAi from "../config/ai-config.js";
 import octokit from "../config/octokit-config.js";
 
 const prompt = `
@@ -226,7 +226,7 @@ export const generateCode = async (repoInfo, cleanedPaths, readedFilesText) => {
 
     const response = await geminiAi.models.generateContent({
       model: "gemini-3-flash-preview",
-      contents: prompt,
+      contents: ai_prompt,
     });
     return response.text;
   } catch (error) {
