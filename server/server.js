@@ -17,20 +17,20 @@ app.use(
   }),
 );
 // app.set("trust proxy", 1);
-
 app.use(
   session({
     secret: process.env.SESSION_KEY,
     resave: false,
-    saveUninitialized: true, // Change to true for testing
+    saveUninitialized: false, // Set to false in production for better security and to save storage
     cookie: {
-      maxAge: 1000 * 60 * 60 * 24 * 7,
-      secure: false, // Must be false for localhost HTTP
-      sameSite: 'lax', 
-      httpOnly: true, // Recommended for security
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+      secure: process.env.NODE_ENV === 'production', // true on Render (HTTPS), false on Localhost
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // 'none' is required for cross-origin cookies on Render
+      httpOnly: true,
     },
   }),
 );
+
 app.use(express.json());
 
 // routes for backend
