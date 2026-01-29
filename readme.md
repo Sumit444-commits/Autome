@@ -14,7 +14,7 @@ Autome is a sophisticated, AI-powered documentation engine designed to streamlin
 ## 🖼️ App Preview
 
 ![Home](./assets/home.png)
-![Generate Page](./assets/generate.png)
+![Generate Page](./assets/generationpage.png)
 ![About](./assets/about.png)
 <!-- 
 Developer Note: To update this preview:

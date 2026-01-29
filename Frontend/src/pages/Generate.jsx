@@ -1,11 +1,61 @@
-import { CloudDownload, Copy, FileSpreadsheet } from "lucide-react";
+import {
+  BadgeAlert,
+  CloudDownload,
+  Copy,
+  FileSpreadsheet,
+  Type,
+  Image,
+  ListChecks,
+  Layers,
+  FolderTree,
+  Terminal,
+  User,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import ReadmePanel from "../components/ReadmePanel";
 import download from "downloadjs";
 import { useStore } from "../hooks/useStore";
 import { useAuth } from "../hooks/useAuth";
-import {useNavigate} from "react-router-dom"
+import { useNavigate } from "react-router-dom";
+
+const sections = [
+  {
+    name: "Header",
+    icon: Type,
+    desc: "Project title, description, and status badges.",
+  },
+  {
+    name: "App Preview",
+    icon: Image,
+    desc: "Visual screenshots or GIFs of your running application.",
+  },
+  {
+    name: "Key Features",
+    icon: ListChecks,
+    desc: "Highlighting the core functionality and value of the code.",
+  },
+  {
+    name: "Technology Stack",
+    icon: Layers,
+    desc: "Automatically detected libraries and frameworks.",
+  },
+  {
+    name: "Directory Structure",
+    icon: FolderTree,
+    desc: "A tree-view visualization of your project's folders.",
+  },
+  {
+    name: "Getting Started",
+    icon: Terminal,
+    desc: "Installation steps and local development commands.",
+  },
+  {
+    name: "Author",
+    icon: User,
+    desc: "Your GitHub profile link and contact information.",
+  },
+];
 
 const Generate = () => {
   const githubRegex =
@@ -13,12 +63,12 @@ const Generate = () => {
   const [repoURL, setRepoURL] = useState("");
   const [isAvailable, setIsAvailable] = useState(false);
   const [mode, setMode] = useState("Preview");
-  const { repoInfo, fetchRepoInfo,generateReadme } = useStore();
+  const { repoInfo, fetchRepoInfo, generateReadme } = useStore();
   const [loading, setLoading] = useState(false);
   const [generating, setIsGenerating] = useState(false);
   const { isLoggedIn } = useAuth();
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [source, setSource] = useState("");
 
@@ -62,21 +112,21 @@ const Generate = () => {
     download(source, "readme.md", "text/markdown");
   };
 
-  const handleGenerate = async ()=>{
+  const handleGenerate = async () => {
     try {
-       if(repoInfo){
-        setSource("")
-        setIsGenerating(true)
-        const data = await generateReadme(repoInfo)
-        setSource(data)
+      if (repoInfo) {
+        setSource("");
+        setIsGenerating(true);
+        const data = await generateReadme(repoInfo);
+        setSource(data);
       }
     } catch (error) {
-     console.log(error)
-    }finally{
-      setIsGenerating(false)
+      console.log(error);
+    } finally {
+      setIsGenerating(false);
     }
-  }
-  
+  };
+
   return (
     <>
       <section className=" md:px-16  pt-24 min-h-screen">
@@ -111,9 +161,12 @@ const Generate = () => {
                     />
 
                     <button
-                    
-                      onClick={()=> {
-                        {!isLoggedIn ? (navigate("/auth?page=login")) : handleAvailbility()}
+                      onClick={() => {
+                        {
+                          !isLoggedIn
+                            ? navigate("/auth?page=login")
+                            : handleAvailbility();
+                        }
                       }}
                       disabled={loading || generating}
                       className={`text-center w-full bg-indigo-600 py-2 rounded-lg hover:bg-indigo-700 transition-all duration-200 ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
@@ -132,12 +185,12 @@ const Generate = () => {
                 <div className="space-y-6 mt-6">
                   <div className="p-6 rounded-2xl bg-white/8 border border-white/12 shadow-xl space-y-6">
                     {/* Repo Description */}
-                    <div className="space-y-5">
+                    <div className="">
                       <div className="flex justify-between items-center">
                         <h2 className="text-xl font-bold text-zinc-100 mb-1">
                           {repoInfo?.repo}
                         </h2>
-                        <div className="bg-blue-700/10 rounded-full text-blue-900 px-2">
+                        <div className="bg-indigo-700/10 rounded-full text-indigo-700 px-2">
                           {repoInfo?.branch}
                         </div>
                       </div>
@@ -147,8 +200,38 @@ const Generate = () => {
                           : "No description"}
                       </p>
                     </div>
-                    {/* <div className="bg-white/8 w-full h-[1px]" /> */}
+                    <div className="bg-white/8 w-full h-[1px]" />
                     {/* Customization */}
+                    <div>
+                      <h3 className="text-lg mb-4">Sections Includes</h3>
+                      <div className="flex flex-wrap gap-3">
+                        {sections.map((section, index) => {
+                          const Icon = section.icon; // Assign component to a variable
+                          return (
+                            <div
+                              key={index}
+                              className="group relative flex items-center gap-2 rounded-lg bg-indigo-600/10 px-3 py-1.5 text-[12px] font-medium text-indigo-300 border border-indigo-500/20 transition-all hover:bg-indigo-600/25 hover:border-indigo-500/50 cursor-help"
+                            >
+                              {/* Dynamic Icon Rendering */}
+                              <Icon
+                                size={14}
+                                className="text-indigo-400 group-hover:text-indigo-300 transition-colors"
+                              />
+
+                              <span>{section.name}</span>
+
+                              {/* Tooltip */}
+                              <div className="absolute bottom-full left-1/2 mb-2 w-48 -translate-x-1/2 scale-0 rounded-md bg-zinc-900 p-2 text-[11px] text-zinc-400 border border-zinc-800 shadow-2xl transition-all duration-200 group-hover:scale-100 z-50 pointer-events-none">
+                                <p className="leading-tight">{section.desc}</p>
+                                <div className="absolute top-full left-1/2 -ml-1 border-4 border-transparent border-t-zinc-900"></div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                    <div className="bg-white/8 w-full h-[1px]" />
+                    <p className="flex justify-between items-center bg-zinc-400/20 py-2 px-2 rounded-lg">Customization & Styling <span className="bg-indigo-600/40 text-indigo-600 px-2 py-1 rounded-full">Coming soon</span></p>
                   </div>
                 </div>
               )}
@@ -161,12 +244,12 @@ const Generate = () => {
               >
                 <button
                   disabled={!isAvailable || !isLoggedIn || generating}
-                  onClick={()=>handleGenerate(repoInfo)}
+                  onClick={() => handleGenerate(repoInfo)}
                   className={`flex gap-3 bg-indigo-600 py-3 items-center justify-center rounded-xl px-6 hover:bg-indigo-700 transition-all duration-200 w-full md:w-auto ${isAvailable && "shadow-lg"} shadow-indigo-500/20 group ${!isAvailable && "disabled:bg-zinc-700"}`}
                 >
                   <FileSpreadsheet className="w-5 h-5 group-hover:scale-110 transition-transform" />
                   <span className="text-md font-bold text-white">
-                    {generating ? "Generating..." :"Generate README"}
+                    {generating ? "Generating..." : "Generate README"}
                   </span>
                 </button>
 

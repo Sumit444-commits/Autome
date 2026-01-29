@@ -1,4 +1,4 @@
-import { UserLock } from "lucide-react";
+import { EyeClosedIcon, EyeIcon, UserLock } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
@@ -6,6 +6,7 @@ import { useAuth } from "../hooks/useAuth";
 const Login = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [state, setState] = useState(searchParams.get("page") || "login");
+  const [showPass, setShowPass] = useState(false);
   const { user, login, signUp } = useAuth();
   const navigate = useNavigate();
 
@@ -32,12 +33,12 @@ const Login = () => {
       signUp(formData);
     }
   };
- useEffect(() => {
-  const page = searchParams.get("page");
-  if (page && page !== state) {
-    setState(page);
-  }
-}, [searchParams, state]);
+  useEffect(() => {
+    const page = searchParams.get("page");
+    if (page && page !== state) {
+      setState(page);
+    }
+  }, [searchParams, state]);
   useEffect(() => {
     if (user) {
       navigate("/");
@@ -135,7 +136,7 @@ const Login = () => {
             <path d="M7 11V7a5 5 0 0 1 10 0v4" />{" "}
           </svg>
           <input
-            type="password"
+            type={showPass ? "text" : "password"}
             name="password"
             placeholder="Password"
             className="w-full bg-transparent text-white placeholder-white/60 border-none outline-none"
@@ -143,6 +144,11 @@ const Login = () => {
             onChange={handleChange}
             required
           />
+          {showPass ? (
+            <EyeClosedIcon onClick={() => setShowPass(!showPass)} className="mr-6 text-gray-500" />
+          ) : (
+            <EyeIcon onClick={() => setShowPass(!showPass)} className="mr-6 text-gray-500" />
+          )}
         </div>
 
         <button

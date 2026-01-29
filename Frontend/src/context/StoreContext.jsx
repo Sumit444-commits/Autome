@@ -27,7 +27,7 @@ const StoreProvider = ({ children }) => {
 
   const generateReadme = async (repoInfo) => {
     try {
-      const { data } = await api.post("/api/github/dataTree", { repoInfo });    
+      const { data } = await api.post("/api/github/generate", { repoInfo });    
       if (data) {
         toast.success("code generated");
         return data
