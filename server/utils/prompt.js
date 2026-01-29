@@ -50,10 +50,16 @@ Generate the Markdown output following this exact structure:
    - Include a link to the user's GitHub profile: "https://github.com/\${repoInfo.owner}".
    - Add placeholders for other social links (LinkedIn, Portfolio) to encourage professional networking.
 
+### 🔒 FINAL OUTPUT
+- Conclude the document exactly with the signature: "Designed with ❤️ Autome".
+- **Strict Rule:** Do not append any text, conversational filler, or explanations after this signature.
+   
 ### 🎨 TONE & FORMATTING RULES
 - **Tone:** Professional, objective, and "Developer-First."
 - **Formatting:** Use GitHub Flavored Markdown (GFM). Ensure high readability with clear headers, bold text for emphasis, and horizontal rules between sections.
 - **Constraints:** Output ONLY the Markdown content. Do not include conversational filler.
+
+
 
 ---
 **Begin README Generation:**

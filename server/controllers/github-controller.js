@@ -140,28 +140,6 @@ export const generateCode = async (repoInfo, cleanedPaths, readedFilesText) => {
         JSON.stringify(readedFilesText),
       )
       .replace("\${repoInfo.owner}", JSON.stringify(repoInfo.owner));
-    // bytez model
-    // const { error, output } = await bytezModel.run(
-    //   [
-    //     {
-    //       role: "user",
-    //       content: ai_prompt,
-    //     },
-    //   ],
-    //   {
-    //     max_new_tokens: 2048, // Ensure it doesn't cut off early
-    //     temperature: 0.5,
-    //   },
-    // );
-
-    // if (error) {
-    //   console.log(error);
-    //   // return res
-    //   //   .status(400)
-    //   //   .json({ message: "Failed to generate", error: error });
-    // } else {
-    //   return output;
-    // }
 
     const response = await geminiAi.models.generateContent({
       model: "gemini-3-flash-preview",
