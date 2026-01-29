@@ -11,19 +11,19 @@ export default function OurLatestCreation() {
     {
         title: "Repository Analysis",
         description: "Our AI engine crawls your codebase to identify architecture, dependencies, and core logic automatically.",
-        image: "https://images.unsplash.com/photo-1543269865-0a740d43b90c?q=80&w=800&h=400&auto=format&fit=crop",
+        image: "/repo_analysis.png",
         align: "object-center",
     },
     {
         title: "Intelligent Generation",
         description: "Transforming raw code insights into professional, high-impact documentation with precision and speed.",
-        image: "https://images.unsplash.com/photo-1714976326351-0ecf0244f0fc?q=80&w=800&h=400&auto=format&fit=crop",
+        image: "/codetodoc.svg",
         align: "object-right",
     },
     {
         title: "Seamless Integration",
         description: "Export clean Markdown files ready for GitHub, tailored specifically for the modern developer workflow.",
-        image: "https://images.unsplash.com/photo-1736220690062-79e12ca75262?q=80&w=800&h=400&auto=format&fit=crop",
+        image: "/githubintegration.png",
         align: "object-center",
     },
 ];
