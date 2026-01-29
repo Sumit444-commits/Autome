@@ -12,7 +12,7 @@ const port = process.env.PORT || 3000;
 
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:5000"],
+    origin: ["http://localhost:5173", "http://localhost:5000", "https://autome-3aq5.onrender.com"],
     credentials: true,
   }),
 );
