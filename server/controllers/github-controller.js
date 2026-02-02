@@ -7,7 +7,7 @@ import { prompt } from "../utils/prompt.js";
 // *****************************************
 export const getRepoInfo = async (req, res) => {
   try {
-    const { owner, repo, url } = req;
+    const { owner, repo, branch, url } = req;
 
     const { data: repoData } = await octokit.rest.repos.get({ owner, repo });
     const repoInfo = {
@@ -17,7 +17,7 @@ export const getRepoInfo = async (req, res) => {
       description: repoData.description,
       homepage: repoData.homepage,
       license: repoData.license,
-      branch: repoData.default_branch,
+      branch: branch || repoData.default_branch,
     };
     res.status(200).json({ repoInfo });
   } catch (error) {
@@ -91,7 +91,12 @@ export const fetchTreeData = async (req, res) => {
     });
     let readedFilesText = "";
     for (const file of importantFiles) {
-      const content = await readFile(repoInfo.owner, repoInfo.repo, file);
+      const content = await readFile(
+        repoInfo.owner,
+        repoInfo.repo,
+        file,
+        repoInfo.branch,
+      );
       const fileText = Buffer.from(content, "base64").toString("UTF-8");
       readedFilesText += "{File Path: " + file + ", Data: " + fileText + "},";
     }
@@ -112,12 +117,13 @@ export const fetchTreeData = async (req, res) => {
 // *****************************************
 //            read files
 // *****************************************
-export const readFile = async (owner, repo, path) => {
+export const readFile = async (owner, repo, path, ref) => {
   try {
     const { data: content } = await octokit.rest.repos.getContent({
       owner: owner,
       repo: repo,
       path: path,
+      ref,
     });
     return content.content;
   } catch (error) {
@@ -146,6 +152,7 @@ export const generateCode = async (repoInfo, cleanedPaths, readedFilesText) => {
       contents: ai_prompt,
     });
     return response.text;
+
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ message: error.message });
