@@ -1,20 +1,33 @@
-# Autome 
+<h1 align="center">
+  <img src="https://autome.vercel.app/favicon.png" alt="Autome Logo" width="60" />
+</h1>
 
-## Elevating Documentation with AI-Driven Precision
+<h1 align="center">Autome</h1>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+<p align="center">
+  <strong>Transform your repository's first impression with AI-driven, professional-grade README documentation.</strong>
+</p>
 
+<p align="center">
+  <img src="https://img.shields.io/github/license/Sumit444-commits/autome?style=for-the-badge" alt="License" />
+  <img src="https://img.shields.io/github/languages/top/Sumit444-commits/autome?style=for-the-badge" alt="Top Language" />
+</p>
 
-Autome is a sophisticated, AI-powered documentation engine designed to streamline the creation of high-fidelity GitHub READMEs. By leveraging the Google Gemini API and GitHub's Octokit, Autome analyzes repository structures and source code to generate professional, context-aware documentation in seconds.
-
+<p align="center">
+  <a href="https://autome.vercel.app"><strong>✨ Live Demo</strong></a> ·
+  <a href="https://github.com/Sumit444-commits/autome/issues">Report Bug</a> ·
+  <a href="https://github.com/Sumit444-commits/autome/pulls">Request Feature</a>
+</p>
 
 ![thumbnail](./assets/forntposter.png)
+> Autome is a sophisticated, AI-powered documentation engine designed to streamline the creation of high-fidelity GitHub READMEs. By leveraging the Google Gemini API and GitHub's Octokit, Autome analyzes repository structures and source code to generate professional, context-aware documentation in seconds.
 ---
 
 ## 🖼️ App Preview
 
 ![Home](./assets/home.png)
 ![Generate Page](./assets/generationpage.png)
+![My Generations](./assets/my-generations.png)
 ![About](./assets/about.png)
 <!-- 
 Developer Note: To update this preview:
@@ -67,7 +80,7 @@ Developer Note: To update this preview:
 │   │   ├── components/      # Reusable UI components (Navbar, Footer, Editor)
 │   │   ├── context/         # Global State Management (Auth, Store)
 │   │   ├── hooks/           # Custom React hooks for logic reuse
-│   │   ├── pages/           # Main route views (Home, Generate, About)
+│   │   ├── pages/           # Main route views (Home, Generate, Generations, About)
 │   │   ├── sections/        # Modular landing page sections
 │   │   └── configs/         # API and environment configurations
 │   └── vite.config.js       # Frontend build configuration
@@ -75,7 +88,7 @@ Developer Note: To update this preview:
 │   ├── config/              # DB, AI, and Octokit initialization logic
 │   ├── controllers/         # Business logic & request handling
 │   ├── middlewares/         # Auth, Error handling, and Validation filters
-│   ├── models/              # MongoDB/Mongoose schemas (User)
+│   ├── models/              # MongoDB/Mongoose schemas (User, Readme)
 │   ├── routes/              # Express API endpoints mapping
 │   ├── validate/            # Zod validation schemas
 │   └── server.js            # Application entry point
@@ -119,11 +132,16 @@ Developer Note: To update this preview:
 Ensure the following keys are defined in your environment:
 
 **Server (`server/.env`):**
-*   `PORT`: Port number for the server.
-*   `MONGODB_URI`: Your MongoDB connection string.
-*   `GEMINI_API_KEY`: API key from Google AI Studio.
-*   `GITHUB_TOKEN`: GitHub Personal Access Token for API access.
-*   `JWT_SECRET`: Secret key for session signing.
+* `PORT`: Port number for the server.
+* `MONGO_URI`: Your MongoDB connection string.
+* `GEMINI_API_KEY`: API key from Google AI Studio.
+* `GITHUB_TOKEN`: GitHub Personal Access Token for API access.
+* `JWT_SECRET`: Secret key for signing and verifying authentication tokens.
+* `FRONTEND_API`: The URL of your deployed frontend for production CORS.
+* `FRONTEND_LOCAL_API`: The URL of your local frontend (e.g., http://localhost:5173).
+* `BACKEND_API`: The URL of your deployed backend server.
+* `BACKEND_LOCAL_API`: The URL of your local backend server (e.g., http://localhost:5000).
+* `NODE_ENV`: The current environment mode (development or production).
 
 **Frontend (`Frontend/.env`):**
 *   `VITE_API_URL`: The URL where your backend server is running.
@@ -146,4 +164,4 @@ Principal Developer of Autome.
 This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
 
 ---
-*Generated with ❤️ by Autome*
+Designed with ❤️ [Autome](https://autome.vercel.app)

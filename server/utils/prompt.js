@@ -51,7 +51,7 @@ Generate the Markdown output following this exact structure:
    - Add placeholders for other social links (LinkedIn, Portfolio) to encourage professional networking.
 
 ### 🔒 FINAL OUTPUT
-- Conclude the document exactly with the signature: "Designed with ❤️ Autome".
+- Conclude the document exactly with the signature: "Designed with ❤️ [Autome](https://autome.vercel.app)".
 - **Strict Rule:** Do not append any text, conversational filler, or explanations after this signature.
    
 ### 🎨 TONE & FORMATTING RULES
