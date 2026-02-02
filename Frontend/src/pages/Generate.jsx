@@ -11,13 +11,14 @@ import {
   Terminal,
   User,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import ReadmePanel from "../components/ReadmePanel";
 import download from "downloadjs";
 import { useStore } from "../hooks/useStore";
 import { useAuth } from "../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import api from "../configs/api";
 
 const sections = [
   {
@@ -56,17 +57,20 @@ const sections = [
     desc: "Your GitHub profile link and contact information.",
   },
 ];
+const githubRegex =
+  /^(?:https?:\/\/)?(?:www\.)?github\.com\/([\w-]+)\/([\w.-]+)(?:\/tree\/([\w.-]+))?\/?$/;
 
 const Generate = () => {
-  const githubRegex =
-    /^(https?:\/\/)?(www\.)?github\.com\/[\w-]+\/[\w.-]+(?:\.git)?\/?$/;
+  const { id } = useParams();
   const [repoURL, setRepoURL] = useState("");
   const [isAvailable, setIsAvailable] = useState(false);
   const [mode, setMode] = useState("Preview");
   const { repoInfo, fetchRepoInfo, generateReadme } = useStore();
+  const [repoHeader, setRepoHeader] = useState(null);
   const [loading, setLoading] = useState(false);
   const [generating, setIsGenerating] = useState(false);
-  const { isLoggedIn } = useAuth();
+  const [update, setUpdate] = useState(false);
+  const { isLoggedIn, isAuthLoading } = useAuth();
 
   const navigate = useNavigate();
 
@@ -85,16 +89,10 @@ const Generate = () => {
     fetchRepoInfo(repoURL);
     setLoading(false);
   };
-  useEffect(() => {
-    if (repoInfo) {
-      setIsAvailable(true);
-    } else {
-      setIsAvailable(false);
-    }
-  }, [repoInfo]);
 
   const handleEdit = (value) => {
     setSource(value);
+    setUpdate(true);
   };
   const handleCopy = () => {
     if (source === "") {
@@ -111,14 +109,18 @@ const Generate = () => {
     }
     download(source, "readme.md", "text/markdown");
   };
-
   const handleGenerate = async () => {
     try {
-      if (repoInfo) {
+      if (repoHeader) {
         setSource("");
         setIsGenerating(true);
-        const data = await generateReadme(repoInfo);
-        setSource(data);
+        const data = await generateReadme(repoHeader);
+        if (data.generated) {
+          toast.success(data.message);
+          navigate(`/generate/${data.id}`);
+        } else {
+          toast.error("Something went wrong...");
+        }
       }
     } catch (error) {
       console.log(error);
@@ -126,6 +128,67 @@ const Generate = () => {
       setIsGenerating(false);
     }
   };
+  const handleUpdate = useCallback(async () => {
+    try {
+      const response = await api.put(`/api/user/readme/edit/${id}`, {
+        content: { source },
+      });
+      setUpdate(false);
+      setMode("Preview");
+      toast.success("Saved successfully!");
+    } catch (err) {
+      console.error("Update failed", err);
+    }
+  }, [id, source]); // Add dependencies as needed
+  useEffect(() => {
+    if (id) {
+      if (isAuthLoading) return;
+      if (!isLoggedIn) {
+        navigate("/auth?page=login");
+        return;
+      }
+      const fetchReadmes = async () => {
+        try {
+          setLoading(true);
+          const response = await api.get(`/api/user/readme/${id}`);
+
+          setRepoURL(response.data.readme.url);
+          setSource(response.data.readme.content || "");
+          setRepoHeader({
+            url: response.data.readme.url,
+            owner: response.data.readme.owner,
+            repo: response.data.readme.repo,
+            description: response.data.readme.description,
+            branch: response.data.readme.branch,
+            homepage: response.data.readme.homepage,
+            license: response.data.readme.license,
+          });
+          setIsAvailable(true);
+        } catch (error) {
+          console.error("Error:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchReadmes();
+    } else {
+      setRepoURL("");
+      setSource("");
+      setRepoHeader(null);
+      setIsAvailable(false);
+    }
+  }, [id, navigate, isAuthLoading, isLoggedIn]);
+
+  useEffect(() => {
+    if (repoInfo) {
+      console.log(repoInfo);
+      setRepoHeader(repoInfo);
+      setIsAvailable(true);
+    } else {
+      setRepoHeader(null);
+      setIsAvailable(false);
+    }
+  }, [repoInfo]);
 
   return (
     <>
@@ -168,13 +231,21 @@ const Generate = () => {
                             : handleAvailbility();
                         }
                       }}
-                      disabled={loading || generating}
-                      className={`text-center w-full bg-indigo-600 py-2 rounded-lg hover:bg-indigo-700 transition-all duration-200 ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+                      disabled={(id && true) || loading || generating}
+                      className={`text-center w-full bg-indigo-600 py-2 rounded-lg hover:bg-indigo-700 disabled:bg-zinc-700 transition-all duration-200 ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
                     >
-                      {!isLoggedIn ? (
-                        "Login to use"
+                      {id ? (
+                        "Disabled"
                       ) : (
-                        <>{loading ? "Checking..." : "Check Availability"}</>
+                        <>
+                          {!isLoggedIn ? (
+                            "Login to use"
+                          ) : (
+                            <>
+                              {loading ? "Checking..." : "Check Availability"}
+                            </>
+                          )}
+                        </>
                       )}
                     </button>
                   </div>
@@ -188,15 +259,15 @@ const Generate = () => {
                     <div className="">
                       <div className="flex justify-between items-center">
                         <h2 className="text-xl font-bold text-zinc-100 mb-1">
-                          {repoInfo?.repo}
+                          {repoHeader?.repo}
                         </h2>
                         <div className="bg-indigo-700/10 rounded-full text-indigo-700 px-2">
-                          {repoInfo?.branch}
+                          {repoHeader?.branch}
                         </div>
                       </div>
                       <p className="text-sm text-zinc-400">
-                        {repoInfo?.description
-                          ? repoInfo?.description
+                        {repoHeader?.description
+                          ? repoHeader?.description
                           : "No description"}
                       </p>
                     </div>
@@ -231,7 +302,12 @@ const Generate = () => {
                       </div>
                     </div>
                     <div className="bg-white/8 w-full h-[1px]" />
-                    <p className="flex justify-between items-center bg-zinc-400/20 py-2 px-2 rounded-lg">Customization & Styling <span className="bg-indigo-600/40 text-indigo-600 px-2 py-1 rounded-full">Coming soon</span></p>
+                    <p className="flex justify-between items-center bg-zinc-400/20 py-2 px-2 rounded-lg">
+                      Customization & Styling{" "}
+                      <span className="bg-indigo-600/40 text-indigo-600 px-2 py-1 rounded-full">
+                        Coming soon
+                      </span>
+                    </p>
                   </div>
                 </div>
               )}
@@ -243,13 +319,29 @@ const Generate = () => {
                 className={`flex items-center justify-between gap-6 md:flex-row flex-col`}
               >
                 <button
-                  disabled={!isAvailable || !isLoggedIn || generating}
-                  onClick={() => handleGenerate(repoInfo)}
-                  className={`flex gap-3 bg-indigo-600 py-3 items-center justify-center rounded-xl px-6 hover:bg-indigo-700 transition-all duration-200 w-full md:w-auto ${isAvailable && "shadow-lg"} shadow-indigo-500/20 group ${!isAvailable && "disabled:bg-zinc-700"}`}
+                  disabled={
+                    (id && !update) || !isAvailable || !isLoggedIn || generating
+                  }
+                  onClick={() => {
+                    if (id) {
+                      handleUpdate();
+                    } else {
+                      handleGenerate(repoHeader);
+                    }
+                  }}
+                  className={`flex gap-3 bg-indigo-600 py-3 items-center justify-center rounded-xl px-6 hover:bg-indigo-700 transition-all duration-200 w-full md:w-auto shadow-lg shadow-indigo-500/20 disabled:shadow-none group disabled:bg-zinc-700`}
                 >
                   <FileSpreadsheet className="w-5 h-5 group-hover:scale-110 transition-transform" />
                   <span className="text-md font-bold text-white">
-                    {generating ? "Generating..." : "Generate README"}
+                    {id ? (
+                      !update ? (
+                        "Save"
+                      ) : (
+                        "Save Changes"
+                      )
+                    ) : (
+                      <>{generating ? "Generating..." : "Generate README"}</>
+                    )}
                   </span>
                 </button>
 

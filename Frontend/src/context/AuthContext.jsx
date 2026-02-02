@@ -15,6 +15,7 @@ const AuthContext = createContext({
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
  
 
   const signUp = async ({ name, email, password }) => {
@@ -57,14 +58,16 @@ const AuthProvider = ({ children }) => {
   };
   const fetchUser = async () => {
      try {
+      setIsAuthLoading(true)
       const { data } = await api.get("/api/auth/verify",{withCredentials: true});
-      
        if (data.user) {
         setUser(data.user);
         setIsLoggedIn(true);
       }
     } catch (error) {
       console.error(error);
+    }finally{
+      setIsAuthLoading(false)
     }
   };
 
@@ -82,6 +85,7 @@ const AuthProvider = ({ children }) => {
     signUp,
     login,
     logout,
+    isAuthLoading,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

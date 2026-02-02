@@ -5,6 +5,7 @@ import session from "express-session";
 import cors from "cors";
 import authRoutes from "./routes/auth-routes.js";
 import githubRoutes from "./routes/github-routes.js";
+import userRoutes from "./routes/user-readme-routes.js";
 import errorMiddleware from "./middlewares/error-middleware.js";
 import connectDB from "./config/db-config.js";
 
@@ -35,7 +36,7 @@ app.use(
     }),
     cookie: {
       maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
-      secure: process.env.NODE_ENV === "production", // true on Render (HTTPS), false on Localhost
+      secure: process.env.NODE_ENV === "production" ? true : false, // true on Render (HTTPS), false on Localhost
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // 'none' is required for cross-origin cookies on Render
       httpOnly: true,
     },
@@ -47,6 +48,7 @@ app.use(express.json());
 // routes for backend
 app.use("/api/auth", authRoutes);
 app.use("/api/github", githubRoutes);
+app.use("/api/user", userRoutes);
 
 // default route to confirm server is running
 app.get("/", (req, res) => {

@@ -9,7 +9,6 @@ export default function Navbar() {
   const navigate = useNavigate();
   const { isLoggedIn, user, logout } = useAuth();
 
- 
   return (
     <>
       <motion.nav
@@ -37,43 +36,52 @@ export default function Navbar() {
           <NavLink to={"/generate"} className="hover:text-slate-300 transition">
             Generate
           </NavLink>
+          {isLoggedIn && (
+            <NavLink
+              to={"/my-generations"}
+              className="hover:text-slate-300 transition"
+            >
+              Generations
+            </NavLink>
+          )}
           <NavLink to={"/about"} className="hover:text-slate-300 transition">
             About
           </NavLink>
         </div>
 
         <div className="hidden lg:block space-x-3">
-          {isLoggedIn ? 
-          (<>
-            <div  className={`relative group`}>
-                 <button className="rounded-full size-8 bg-white/20 border-2 border-white/10">
-                {user?.name.charAt(0).toUpperCase()}
-              </button>
-              <div className="absolute hidden group-hover:block top-6 right-0 pt-4">
-                <button
-                  onClick={logout}
-                  className="bg-white/20 border-2 border-white/10 px-5 py-1.5 rounded"
-                >
-                  logout
+          {isLoggedIn ? (
+            <>
+              <div className={`relative group`}>
+                <button className="rounded-full size-8 bg-white/20 border-2 border-white/10">
+                  {user?.name.charAt(0).toUpperCase()}
                 </button>
+                <div className="absolute hidden group-hover:block top-6 right-0 pt-4">
+                  <button
+                    onClick={logout}
+                    className="bg-white/20 border-2 border-white/10 px-5 py-1.5 rounded"
+                  >
+                    logout
+                  </button>
+                </div>
               </div>
-
-            </div>
-          </>)
-          : 
-          <>
-          <button
-          onClick={() => navigate("/auth?page=register")}
-          className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 transition text-white rounded-md active:scale-95">
-            Get started
-          </button>
-          <button
-            onClick={() => navigate("/auth?page=login")}
-            className="hover:bg-slate-300/20 transition px-6 py-2 border border-slate-400 rounded-md active:scale-95"
-            >
-            Login
-          </button>
-              </>}
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => navigate("/auth?page=register")}
+                className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 transition text-white rounded-md active:scale-95"
+              >
+                Get started
+              </button>
+              <button
+                onClick={() => navigate("/auth?page=login")}
+                className="hover:bg-slate-300/20 transition px-6 py-2 border border-slate-400 rounded-md active:scale-95"
+              >
+                Login
+              </button>
+            </>
+          )}
         </div>
 
         <button
@@ -94,6 +102,11 @@ export default function Navbar() {
         <NavLink to="/generate" onClick={() => setIsMenuOpen(false)}>
           Generate
         </NavLink>
+        {isLoggedIn && (
+          <NavLink to="/my-generations" onClick={() => setIsMenuOpen(false)}>
+            Generations
+          </NavLink>
+        )}
 
         <NavLink to="/about" onClick={() => setIsMenuOpen(false)}>
           About

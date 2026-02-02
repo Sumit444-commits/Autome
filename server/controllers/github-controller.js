@@ -1,5 +1,6 @@
 import geminiAi from "../config/ai-config.js";
 import octokit from "../config/octokit-config.js";
+import { Readme } from "../models/readme-model.js";
 import { prompt } from "../utils/prompt.js";
 
 // *****************************************
@@ -32,6 +33,7 @@ export const getRepoInfo = async (req, res) => {
 export const fetchTreeData = async (req, res) => {
   try {
     const { repoInfo } = req.body;
+    const { userId } = req.session;
 
     const { data: treeData } = await octokit.rest.git.getTree({
       owner: repoInfo.owner,
@@ -102,12 +104,15 @@ export const fetchTreeData = async (req, res) => {
     }
 
     const result = await generateCode(
+      userId,
       repoInfo,
       cleanedPaths.toString(),
       readedFilesText.toString(),
     );
 
-    res.status(200).send(result);
+    res
+      .status(200)
+      .json({ message: "Generation Complete", id: result, generated: true });
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ message: error.message });
@@ -128,7 +133,6 @@ export const readFile = async (owner, repo, path, ref) => {
     return content.content;
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ message: error.message });
   }
 };
 
@@ -136,7 +140,12 @@ export const readFile = async (owner, repo, path, ref) => {
 //            Generate Readme Code
 // *****************************************
 
-export const generateCode = async (repoInfo, cleanedPaths, readedFilesText) => {
+export const generateCode = async (
+  userId,
+  repoInfo,
+  cleanedPaths,
+  readedFilesText,
+) => {
   try {
     const ai_prompt = prompt
       .replace("\${JSON.stringify(repoInfo)}", JSON.stringify(repoInfo))
@@ -151,10 +160,36 @@ export const generateCode = async (repoInfo, cleanedPaths, readedFilesText) => {
       model: "gemini-3-flash-preview",
       contents: ai_prompt,
     });
-    return response.text;
 
+    if (!response) {
+      throw new Error("Failed to generate");
+    }
+
+    if (!response.text || response.text.trim().length === 0) {
+      throw new Error("AI returned an empty or invalid content string.");
+    }
+
+    const readme = await Readme.findOneAndUpdate(
+      { userId: userId, url: repoInfo.url },
+      {
+        userId: userId,
+        url: repoInfo.url,
+        owner: repoInfo.owner,
+        repo: repoInfo.repo,
+        description: repoInfo.description,
+        homepage: repoInfo.homepage,
+        license: repoInfo.license,
+        branch: repoInfo.branch,
+        content: response.text,
+      },
+      {
+        upsert: true, // 3. The Instruction: "If not found, create a new one"
+        new: true, // 4. The Instruction: "Return the updated document, not the old one"
+      },
+    );
+
+    return readme._id;
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({ message: error.message });
   }
 };

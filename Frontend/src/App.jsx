@@ -8,6 +8,7 @@ import About from "./pages/About";
 import Login from "./components/Login";
 import Error from "./pages/Error";
 import { useEffect } from "react";
+import MyGenerations from "./pages/MyGenerations";
 
 export default function App() {
     const {pathname} = useLocation()
@@ -22,7 +23,8 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/generate" element={<Generate />} />
-       
+        <Route path="/generate/:id" element={<Generate />} />
+        <Route path="/my-generations" element={<MyGenerations />} />
         <Route path="/about" element={<About />} />
         <Route path="/auth" element={<Login />} />
         <Route path="/*" element={<Error />} />
